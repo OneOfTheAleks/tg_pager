@@ -46,18 +46,15 @@ func (s *Service) RunBot(ctx context.Context, msgChan chan<- models.Message) {
 			return
 		case update := <-updates:
 			if update.Message != nil {
-				//	log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
-
-				//	msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
-				//	msg.ReplyToMessageID = update.Message.MessageID
-
-				//	_, err := s.bot.Send(msg)
-				//	if err != nil {
-				//		return
-				//	}
+				rm := ""
+				if update.Message.ReplyToMessage != nil {
+					rm = update.Message.ReplyToMessage.Text
+				}
+				command := update.Message.Text
 				message := models.Message{
-					Msg: update.Message.Text,
-					ID:  update.Message.Chat.ID,
+					Msg:     rm,
+					ID:      update.Message.Chat.ID,
+					Command: command,
 				}
 				msgChan <- message
 			}
