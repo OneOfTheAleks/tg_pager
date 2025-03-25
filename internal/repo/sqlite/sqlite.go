@@ -27,7 +27,7 @@ func New(path string) (*SqliteRepo, error) {
 }
 
 func (s *SqliteRepo) GetMessages(tag string) ([]string, error) {
-	query := "SELECT message FROM message WHERE tag = ?"
+	query := "SELECT message FROM messages WHERE tag = ?"
 
 	rows, err := s.db.Query(query, tag)
 	if err != nil {

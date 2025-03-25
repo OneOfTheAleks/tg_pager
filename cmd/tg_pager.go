@@ -7,6 +7,7 @@ import (
 	"tg_pager/internal/handlers"
 	"tg_pager/internal/repo"
 	sqliterepo "tg_pager/internal/repo/sqlite"
+	"tg_pager/internal/services/random"
 	"tg_pager/internal/services/telegram"
 )
 
@@ -31,8 +32,10 @@ func main() {
 		log.Fatalf("Failed to connect telegram: %v", err)
 	}
 	// --------------------
+	rnd := random.New()
+	// ---------------------
 
-	handler := handlers.NewHandler(tg, repository)
+	handler := handlers.NewHandler(tg, repository, rnd)
 	ctx := context.Background()
 	handler.Start(ctx)
 }
