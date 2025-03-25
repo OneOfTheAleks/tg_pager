@@ -60,9 +60,7 @@ func (h *Handler) saveMessage(tag, msg string) {
 
 func (h *Handler) checkMessage(msg models.Message) {
 	array := strings.Fields(msg.Command)
-	println(array[0])
-	println(NameBot)
-	println(strings.EqualFold(array[0], NameBot))
+
 	if len(array) > 0 {
 		if !strings.EqualFold(array[0], NameBot) {
 			return
