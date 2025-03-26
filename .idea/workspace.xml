@@ -5,12 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fa76706c-a07c-45ea-8b7d-3430e94996ef" name="Changes" comment="save message">
-      <change afterPath="$PROJECT_DIR$/internal/services/random/random.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/services/ai/ai.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/services/ai/deepseek/deepseek.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/services/ai/deepseek/models.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/tg_pager.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/tg_pager.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data.db" beforeDir="false" afterPath="$PROJECT_DIR$/data.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/handlers/handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/handlers/handler.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/repo/sqlite/sqlite.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/repo/sqlite/sqlite.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,6 +123,16 @@
           <url>file://$PROJECT_DIR$/internal/services/random/random.go</url>
           <line>17</line>
           <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/internal/services/ai/deepseek/deepseek.go</url>
+          <line>52</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/internal/services/ai/deepseek/deepseek.go</url>
+          <line>18</line>
+          <option name="timeStamp" value="15" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

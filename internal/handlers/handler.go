@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"os/signal"
 	"strconv"
@@ -10,6 +9,7 @@ import (
 	"syscall"
 	"tg_pager/internal/models"
 	"tg_pager/internal/repo"
+	"tg_pager/internal/services/ai"
 	"tg_pager/internal/services/random"
 	"tg_pager/internal/services/telegram"
 )
@@ -18,20 +18,22 @@ const NameBot string = "Король"
 const CommandSave = "с"
 const CommandShow = "п"
 const CommandRandom = "р"
+const CommandSpeak = "г"
 const LineBreak = "\r\n"
 
 type Handler struct {
-	botService *telegram.Service
-	//	deepseekService *deepseek.Service
+	botService    *telegram.Service
+	aiService     *ai.AiService
 	randomService *random.Service
 	repo          *repo.Repository
 }
 
-func NewHandler(botService *telegram.Service, repo *repo.Repository, rnd *random.Service) *Handler {
+func NewHandler(botService *telegram.Service, repo *repo.Repository, rnd *random.Service, ai *ai.AiService) *Handler {
 	return &Handler{
 		botService:    botService,
 		repo:          repo,
 		randomService: rnd,
+		aiService:     ai,
 	}
 }
 
@@ -45,7 +47,6 @@ func (h *Handler) Start(ctx context.Context) {
 	for {
 		select {
 		case msg := <-msgChan:
-			fmt.Println("Получено:", msg)
 			h.checkMessage(msg)
 		case <-sigChan:
 			cancel()
@@ -72,26 +73,37 @@ func (h *Handler) checkMessage(msg models.Message) {
 		}
 	}
 	if len(array) > 2 {
+		// сохранить
 		if strings.EqualFold(array[0], NameBot) && len(array[2]) > 0 {
 			if strings.EqualFold(array[1], CommandSave) && len(msg.Msg) > 0 {
 				h.saveMessage(array[2], msg.Msg)
 				return
 			}
 		}
+		// Показать
 		if strings.EqualFold(array[1], CommandShow) {
 			h.showMessage(msg, array[2])
 			return
 		}
+		// запрос к ИИ
+		if strings.EqualFold(array[0], NameBot) && strings.EqualFold(array[1], CommandSpeak) && len(array[2]) > 0 {
+			prompt, ok := extractRemaining(msg.Command)
+			if ok {
+				h.showSpeak(msg, prompt)
+			}
+			return
+		}
 
 	}
-
+	// Рандом
 	if len(array) == 2 {
 		if strings.EqualFold(array[0], NameBot) && strings.EqualFold(array[1], CommandRandom) {
 			h.showRandom(msg)
 			return
 		}
-	}
 
+	}
+	// Помошь
 	if len(array) == 1 {
 		if strings.EqualFold(array[0], NameBot) {
 			h.sendMessageError(msg)
@@ -144,4 +156,22 @@ func (h *Handler) showRandom(in models.Message) {
 		res = "Решка"
 	}
 	h.botService.SendMessage(in.ID, "Выпало: "+res)
+}
+
+func (h *Handler) showSpeak(in models.Message, prompt string) {
+	response, err := h.aiService.GetResponse(prompt)
+	if err != nil {
+		return
+	}
+	h.botService.SendMessage(in.ID, response)
+}
+
+func extractRemaining(str string) (string, bool) {
+	word1Length := len(NameBot)
+	word2Length := len(CommandSpeak)
+	if len(str) < word1Length+1+word2Length {
+		return "", false // Строка слишком короткая
+	}
+	remainingString := str[word1Length+1+word2Length:]
+	return remainingString, len(remainingString) > 0
 }

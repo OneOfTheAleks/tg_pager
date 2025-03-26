@@ -7,11 +7,14 @@ import (
 	"tg_pager/internal/handlers"
 	"tg_pager/internal/repo"
 	sqliterepo "tg_pager/internal/repo/sqlite"
+	"tg_pager/internal/services/ai"
+	ds "tg_pager/internal/services/ai/deepseek"
 	"tg_pager/internal/services/random"
 	"tg_pager/internal/services/telegram"
 )
 
 func main() {
+	ctx := context.Background()
 	cfg, err := config.New()
 	if err != nil {
 		log.Fatalf("Failed to load config: %v", err)
@@ -34,8 +37,9 @@ func main() {
 	// --------------------
 	rnd := random.New()
 	// ---------------------
+	dsService := ds.New(cfg.DeepSeekAPIKey)
+	aiService := ai.New(dsService)
 
-	handler := handlers.NewHandler(tg, repository, rnd)
-	ctx := context.Background()
+	handler := handlers.NewHandler(tg, repository, rnd, aiService)
 	handler.Start(ctx)
 }
