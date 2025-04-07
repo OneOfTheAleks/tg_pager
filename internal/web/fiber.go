@@ -3,6 +3,7 @@ package web
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/template/html/v2"
 )
 
 type WebServer struct {
@@ -12,11 +13,16 @@ type WebServer struct {
 }
 
 func New(addr string, port string) (*WebServer, error) {
-	app := fiber.New()
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World 👋!")
+	engine := html.New("./html", ".html")
+	app := fiber.New(fiber.Config{
+		Views: engine,
 	})
+
+	h := newWebHandlers()
+	app.Get("/", h.Home)
+	app.Get("/tags", h.Tags)
+
 	return &WebServer{
 		addr: addr,
 		port: port,
