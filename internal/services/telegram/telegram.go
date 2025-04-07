@@ -31,8 +31,8 @@ func (s *Service) SendMessage(chatID int64, text string) {
 
 func (s *Service) RunBot(ctx context.Context, msgChan chan<- models.Message) {
 
-	s.bot.Debug = true
-	log.Printf("Authorized on account %s", s.bot.Self.UserName)
+	s.bot.Debug = false
+	// log.Printf("Authorized on account %s", s.bot.Self.UserName)
 
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60

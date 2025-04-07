@@ -12,6 +12,7 @@ import (
 	"tg_pager/internal/services/ai"
 	"tg_pager/internal/services/random"
 	"tg_pager/internal/services/telegram"
+	"tg_pager/internal/web"
 )
 
 const NameBot string = "Король"
@@ -23,26 +24,33 @@ const LineBreak = "\r\n"
 
 type Handler struct {
 	botService    *telegram.Service
+	webService    *web.WebServer
 	aiService     *ai.AiService
 	randomService *random.Service
 	repo          *repo.Repository
 }
 
-func NewHandler(botService *telegram.Service, repo *repo.Repository, rnd *random.Service, ai *ai.AiService) *Handler {
+func NewHandler(botService *telegram.Service, web *web.WebServer, repo *repo.Repository, rnd *random.Service, ai *ai.AiService) *Handler {
 	return &Handler{
 		botService:    botService,
+		webService:    web,
 		repo:          repo,
 		randomService: rnd,
 		aiService:     ai,
 	}
 }
 
-func (h *Handler) Start(ctx context.Context) {
+func (h *Handler) Start(ctx context.Context) error {
 	msgChan := make(chan models.Message)
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 	ctx, cancel := context.WithCancel(ctx)
 	go h.botService.RunBot(ctx, msgChan)
+	err := h.webService.Start()
+	if err != nil {
+		cancel()
+		return err
+	}
 
 	for {
 		select {
@@ -50,7 +58,11 @@ func (h *Handler) Start(ctx context.Context) {
 			h.checkMessage(msg)
 		case <-sigChan:
 			cancel()
-			return
+			err := h.webService.Stop()
+			if err != nil {
+				return err
+			}
+			return nil
 		}
 	}
 

@@ -8,9 +8,10 @@ import (
 	"tg_pager/internal/repo"
 	sqliterepo "tg_pager/internal/repo/sqlite"
 	"tg_pager/internal/services/ai"
-	ds "tg_pager/internal/services/ai/deepseek"
+	"tg_pager/internal/services/ai/gemini"
 	"tg_pager/internal/services/random"
 	"tg_pager/internal/services/telegram"
+	"tg_pager/internal/web"
 )
 
 func main() {
@@ -37,9 +38,15 @@ func main() {
 	// --------------------
 	rnd := random.New()
 	// ---------------------
-	dsService := ds.New(cfg.DeepSeekAPIKey)
-	aiService := ai.New(dsService)
+	//	dsService := ds.New(cfg.DeepSeekAPIKey)
+	// dsService := ds.NewHug(cfg.DeepSeekAPIKey)
+	gm, _ := gemini.New(cfg.APIKey, "")
+	aiService := ai.New(gm)
+	w, err := web.New(cfg.Addr, cfg.Port)
+	if err != nil {
+		log.Fatalf("Failed to create web server: %v", err)
+	}
 
-	handler := handlers.NewHandler(tg, repository, rnd, aiService)
+	handler := handlers.NewHandler(tg, w, repository, rnd, aiService)
 	handler.Start(ctx)
 }

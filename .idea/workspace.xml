@@ -5,12 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fa76706c-a07c-45ea-8b7d-3430e94996ef" name="Changes" comment="save message">
-      <change afterPath="$PROJECT_DIR$/internal/services/ai/ai.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/services/ai/deepseek/deepseek.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/services/ai/deepseek/models.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/services/ai/deepseek/huggingFace.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/services/ai/deepseek/huggingModel.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/services/ai/gemini/gemini.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/services/ai/gemini/models.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/web/fiber.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/tg_pager.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/tg_pager.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/config/config.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/handlers/handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/handlers/handler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/services/telegram/telegram.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/services/telegram/telegram.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +84,8 @@
       <module name="tg_pager" />
       <working_directory value="$PROJECT_DIR$" />
       <envs>
-        <env name="deepSeekAPIKey" value="sk-f378ef77f20d4f3b82b6518a54e7e830" />
+        <env name="apiKey" value="AIzaSyCb72XTY8atLs89KNlodiJgtIHB8diAs3Q" />
+        <env name="deepSeekAPIKey" value="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" />
         <env name="token" value="5383102079:AAGZAQgdbNEx-JlCwi7VS9xrj5nvAMSfWjc" />
       </envs>
       <kind value="FILE" />
@@ -133,6 +140,26 @@
           <url>file://$PROJECT_DIR$/internal/services/ai/deepseek/deepseek.go</url>
           <line>18</line>
           <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/internal/services/ai/deepseek/huggingFace.go</url>
+          <line>21</line>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/internal/services/ai/deepseek/huggingFace.go</url>
+          <line>23</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/internal/services/ai/gemini/gemini.go</url>
+          <line>34</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/internal/handlers/handler.go</url>
+          <line>43</line>
+          <option name="timeStamp" value="23" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
