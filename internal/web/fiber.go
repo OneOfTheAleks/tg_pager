@@ -22,6 +22,7 @@ func New(addr string, port string) (*WebServer, error) {
 	h := newWebHandlers()
 	app.Get("/", h.Home)
 	app.Get("/tags", h.Tags)
+	app.Get("/content", h.Content)
 
 	return &WebServer{
 		addr: addr,
