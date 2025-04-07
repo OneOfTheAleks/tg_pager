@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html/v2"
+	"path/filepath"
 )
 
 type WebServer struct {
@@ -13,8 +14,12 @@ type WebServer struct {
 }
 
 func New(addr string, port string) (*WebServer, error) {
+	templatePath, err := filepath.Abs("./views")
+	if err != nil {
+		return nil, err
+	}
 
-	engine := html.New("./html", ".html")
+	engine := html.New(templatePath, ".html")
 	app := fiber.New(fiber.Config{
 		Views: engine,
 	})
