@@ -5,14 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fa76706c-a07c-45ea-8b7d-3430e94996ef" name="Changes" comment="save message">
-      <change afterPath="$PROJECT_DIR$/views/content.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/views/temp.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/html/content.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/html/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/views/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/html/tags.html" beforeDir="false" afterPath="$PROJECT_DIR$/views/tags.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/web/fiber.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/web/fiber.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/web/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/web/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/content.html" beforeDir="false" afterPath="$PROJECT_DIR$/views/content.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/temp.html" beforeDir="false" afterPath="$PROJECT_DIR$/views2/temp.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,6 +70,8 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\project\go\tg_pager\views" />
+      <recent name="E:\project\go\tg_pager\views2" />
       <recent name="E:\project\go\tg_pager" />
       <recent name="E:\project\go\tg_pager\internal\repo\sqlite" />
     </key>
@@ -168,8 +166,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/internal/web/fiber.go</url>
-          <line>20</line>
+          <line>21</line>
           <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/internal/web/fiber.go</url>
+          <line>15</line>
+          <option name="timeStamp" value="31" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

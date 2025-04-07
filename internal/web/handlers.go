@@ -26,7 +26,7 @@ func (w *WebHandlers) Home(c *fiber.Ctx) error {
 func (h *WebHandlers) Content(c *fiber.Ctx) error {
 	tag := c.Query("tag")
 
-	// Структура данных: тег -> список записей
+	// Данные по тегам
 	contentMap := map[string][]string{
 		"golang": {
 			"Golang — это язык программирования, разработанный Google.",
@@ -43,15 +43,28 @@ func (h *WebHandlers) Content(c *fiber.Ctx) error {
 		},
 	}
 
-	// Проверяем, существует ли тег
+	// Проверяем наличие тега
 	if contentList, exists := contentMap[tag]; exists {
+		// Подготавливаем структуру с индексами
+		type ContentRow struct {
+			Index   int
+			Content string
+		}
+
+		var rows []ContentRow
+		for i, text := range contentList {
+			rows = append(rows, ContentRow{
+				Index:   i + 1, // начинаем с 1
+				Content: text,
+			})
+		}
+
 		return c.Render("content", fiber.Map{
 			"Title":   "Контент для тега: " + tag,
 			"Tag":     tag,
-			"Content": contentList,
+			"Content": rows,
 		})
 	}
 
-	// Если тег не найден, возвращаем ошибку
 	return c.Status(fiber.StatusNotFound).SendString("Тег не найден")
 }
