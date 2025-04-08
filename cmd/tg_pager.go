@@ -11,7 +11,7 @@ import (
 	"tg_pager/internal/services/ai/gemini"
 	"tg_pager/internal/services/random"
 	"tg_pager/internal/services/telegram"
-	"tg_pager/internal/web"
+	"tg_pager/internal/services/web"
 )
 
 func main() {
@@ -42,7 +42,7 @@ func main() {
 	// dsService := ds.NewHug(cfg.DeepSeekAPIKey)
 	gm, _ := gemini.New(cfg.APIKey, "")
 	aiService := ai.New(gm)
-	w, err := web.New(cfg.Addr, cfg.Port)
+	w, err := web.New(cfg.Addr, cfg.Port, repository)
 	if err != nil {
 		log.Fatalf("Failed to create web server: %v", err)
 	}

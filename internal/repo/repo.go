@@ -5,8 +5,10 @@ type Repository struct {
 }
 
 type message interface {
+	GetTags() ([]string, error)
 	GetMessages(tag string) ([]string, error)
 	SaveMessage(tag string, msg string) error
+	DeleteMessage(tag string) error
 }
 
 func New(mes message) (*Repository, error) {
@@ -29,4 +31,17 @@ func (r *Repository) GetMessages(tag string) ([]string, error) {
 		return nil, err
 	}
 	return array, nil
+}
+
+func (r *Repository) GetTags() ([]string, error) {
+	array, err := r.storage.GetTags()
+	if err != nil {
+		return nil, err
+	}
+	return array, nil
+}
+
+func (r *Repository) DeleteMessage(tag string) error {
+	err := r.storage.DeleteMessage(tag)
+	return err
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html/v2"
+	"tg_pager/internal/repo"
 )
 
 type WebServer struct {
@@ -12,13 +13,8 @@ type WebServer struct {
 	app  *fiber.App
 }
 
-func New(addr string, port string) (*WebServer, error) {
-	//	templatePath, err := filepath.Abs("./views")
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	templatePath := "E:/project/go/tg_pager/views"
-
+func New(addr string, port string, repo *repo.Repository) (*WebServer, error) {
+	templatePath := "./views"
 	engine := html.New(templatePath, ".html")
 
 	if err := engine.Load(); err != nil {
@@ -30,7 +26,7 @@ func New(addr string, port string) (*WebServer, error) {
 		Views: engine,
 	})
 
-	h := newWebHandlers()
+	h := newWebHandlers(repo)
 	app.Get("/", h.Home)
 	app.Get("/tags", h.Tags)
 	app.Get("/content", h.Content)

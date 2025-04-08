@@ -56,3 +56,34 @@ func (s *SqliteRepo) SaveMessage(tag string, msg string) error {
 	}
 	return nil
 }
+
+func (s *SqliteRepo) GetTags() ([]string, error) {
+	query := "SELECT DISTINCT tag FROM messages"
+
+	rows, err := s.db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var res []string
+
+	for rows.Next() {
+		var message string
+		err := rows.Scan(&message) // Считываем значения в переменные
+		if err != nil {
+			log.Print("Ошибка при чтении тегов: %v", err)
+		}
+		res = append(res, message)
+	}
+	return res, nil
+}
+
+func (s *SqliteRepo) DeleteMessage(tag string) error {
+	query := "DELETE FROM messages WHERE tag =?"
+	_, err := s.db.Exec(query, tag)
+	if err != nil {
+		return fmt.Errorf("failed to delete message: %v", err)
+	}
+	return nil
+}

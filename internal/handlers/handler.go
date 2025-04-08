@@ -12,7 +12,7 @@ import (
 	"tg_pager/internal/services/ai"
 	"tg_pager/internal/services/random"
 	"tg_pager/internal/services/telegram"
-	"tg_pager/internal/web"
+	"tg_pager/internal/services/web"
 )
 
 const NameBot string = "Король"
@@ -173,7 +173,8 @@ func (h *Handler) showRandom(in models.Message) {
 func (h *Handler) showSpeak(in models.Message, prompt string) {
 	response, err := h.aiService.GetResponse(prompt)
 	if err != nil {
-		return
+		response = " Не могу говорить, я занят! "
+
 	}
 	h.botService.SendMessage(in.ID, response)
 }
