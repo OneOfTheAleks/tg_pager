@@ -21,8 +21,12 @@ func New(token string) (*Service, error) {
 	return &Service{bot: bot}, nil
 }
 
-func (s *Service) SendMessage(chatID int64, text string) {
+func (s *Service) SendMessage(chatID int64, text string, replyIDs ...int) {
 	msg := tgbotapi.NewMessage(chatID, text)
+	if len(replyIDs) > 0 {
+		msg.ReplyToMessageID = replyIDs[0]
+	}
+
 	_, err := s.bot.Send(msg)
 	if err != nil {
 		log.Printf("Failed to send message: %v", err)
@@ -52,9 +56,10 @@ func (s *Service) RunBot(ctx context.Context, msgChan chan<- models.Message) {
 				}
 				command := update.Message.Text
 				message := models.Message{
-					Msg:     rm,
-					ID:      update.Message.Chat.ID,
-					Command: command,
+					Msg:       rm,
+					ChatID:    update.Message.Chat.ID,
+					Command:   command,
+					MessageID: update.Message.MessageID,
 				}
 				msgChan <- message
 			}

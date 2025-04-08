@@ -2,7 +2,8 @@ package models
 
 // сообщение
 type Message struct {
-	Msg     string
-	ID      int64
-	Command string
+	Msg       string
+	ChatID    int64
+	Command   string
+	MessageID int
 }

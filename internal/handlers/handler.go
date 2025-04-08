@@ -20,6 +20,7 @@ const CommandSave = "с"
 const CommandShow = "п"
 const CommandRandom = "р"
 const CommandSpeak = "г"
+const CommandDelete = "у"
 const LineBreak = "\r\n"
 
 type Handler struct {
@@ -68,12 +69,13 @@ func (h *Handler) Start(ctx context.Context) error {
 
 }
 
-func (h *Handler) saveMessage(tag, msg string) {
+func (h *Handler) saveMessage(tag, msg string) error {
 
 	err := h.repo.SaveMessage(tag, msg)
 	if err != nil {
-		return
+		return err
 	}
+	return nil
 }
 
 func (h *Handler) checkMessage(msg models.Message) {
@@ -88,20 +90,32 @@ func (h *Handler) checkMessage(msg models.Message) {
 		// сохранить
 		if strings.EqualFold(array[0], NameBot) && len(array[2]) > 0 {
 			if strings.EqualFold(array[1], CommandSave) && len(msg.Msg) > 0 {
-				h.saveMessage(array[2], msg.Msg)
+
+				err := h.saveMessage(array[2], msg.Msg)
+				h.answer(CommandSave, msg.ChatID, msg.MessageID, err != nil)
 				return
 			}
 		}
 		// Показать
-		if strings.EqualFold(array[1], CommandShow) {
+		if strings.EqualFold(array[0], NameBot) && strings.EqualFold(array[1], CommandShow) {
 			h.showMessage(msg, array[2])
 			return
 		}
+		// Удалить
+		if strings.EqualFold(array[0], NameBot) && strings.EqualFold(array[1], CommandDelete) {
+			err := h.repo.DeleteMessage(array[2])
+			if err != nil {
+				return
+			}
+			return
+		}
+
 		// запрос к ИИ
 		if strings.EqualFold(array[0], NameBot) && strings.EqualFold(array[1], CommandSpeak) && len(array[2]) > 0 {
 			prompt, ok := extractRemaining(msg.Command)
 			if ok {
-				h.showSpeak(msg, prompt)
+				err := h.showSpeak(msg, prompt, msg.MessageID)
+				h.answer(CommandSpeak, msg.ChatID, msg.MessageID, err != nil)
 			}
 			return
 		}
@@ -125,8 +139,10 @@ func (h *Handler) checkMessage(msg models.Message) {
 
 func (h *Handler) sendMessageError(message models.Message) {
 	answer := "Чего тебе? Я вот как работую: Укажи мое имя: " + NameBot + ", укажи команду: " + CommandSave + " (сохранить) или " + CommandShow + " (показать), укажи тэг. " +
-		"Если хочешь что-то сохранить, ответь этой командой на сохраняемое сообщение. А если хочешь игрануть в 'Орел/Решка' просто набери " + NameBot + ", и укажи команду: " + CommandRandom + " (рандом)"
-	h.botService.SendMessage(message.ID, answer)
+		"Если хочешь что-то сохранить, ответь этой командой на сохраняемое сообщение." + LineBreak + " А если хочешь игрануть в 'Орел/Решка' " +
+		"просто набери " + NameBot + ", и укажи команду: " + CommandRandom + " (рандом)." + LineBreak + " Если надо удалить, пиши мое имя " + NameBot + ",  пиши команду " + CommandDelete + ", да " +
+		"напиши тэг. И поговорить тоже можно! Пиши " + NameBot + " команду " + CommandSpeak + " да вопрос свой задавай"
+	h.botService.SendMessage(message.ChatID, answer, message.MessageID)
 
 }
 
@@ -154,7 +170,7 @@ func (h *Handler) showMessage(in models.Message, tag string) {
 	}
 	sentence = "Вот, что я нашел:" + LineBreak + sentence
 
-	h.botService.SendMessage(in.ID, sentence)
+	h.botService.SendMessage(in.ChatID, sentence)
 }
 
 func (h *Handler) random() bool {
@@ -167,16 +183,16 @@ func (h *Handler) showRandom(in models.Message) {
 	if coin {
 		res = "Решка"
 	}
-	h.botService.SendMessage(in.ID, "Выпало: "+res)
+	h.botService.SendMessage(in.ChatID, "Выпало: "+res)
 }
 
-func (h *Handler) showSpeak(in models.Message, prompt string) {
+func (h *Handler) showSpeak(in models.Message, prompt string, MessageID int) error {
 	response, err := h.aiService.GetResponse(prompt)
 	if err != nil {
-		response = " Не могу говорить, я занят! "
-
+		return err
 	}
-	h.botService.SendMessage(in.ID, response)
+	h.botService.SendMessage(in.ChatID, response, MessageID)
+	return nil
 }
 
 func extractRemaining(str string) (string, bool) {
@@ -188,3 +204,20 @@ func extractRemaining(str string) (string, bool) {
 	remainingString := str[word1Length+1+word2Length:]
 	return remainingString, len(remainingString) > 0
 }
+
+func (h *Handler) answer(command string, chatId int64, messageId int, hasError bool) {
+	if strings.EqualFold(command, CommandSave) {
+		mes := "Сохранил!"
+		if hasError {
+			mes = "Что-то не удалось сохранить"
+		}
+		h.botService.SendMessage(chatId, mes, messageId)
+		return
+	}
+	if strings.EqualFold(command, CommandSpeak) && hasError {
+		h.botService.SendMessage(chatId, "Не могу говорить, я занят!", messageId)
+	}
+
+}
+
+//response =

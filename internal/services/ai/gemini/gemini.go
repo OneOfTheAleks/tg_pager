@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 )
 
 type Gemini struct {
@@ -30,9 +31,11 @@ func New(apikey, modelName string) (*Gemini, error) {
 func (r *Gemini) GetResponse(prompt string) (string, error) {
 
 	prompt = "Представь что ты Саймон Петриков Снежный король из мультфильма Время Приключений.  Как бы ты ответил на это: " + prompt
+	modelName := strings.TrimSpace(r.modelName)
+	apiKey := strings.TrimSpace(r.apiKey)
 
 	// Формируем URL эндпоинта
-	url := fmt.Sprintf("https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s", r.modelName, r.apiKey)
+	url := fmt.Sprintf("https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s", modelName, apiKey)
 
 	// Формируем тело запроса
 	requestBody := GeminiRequest{
