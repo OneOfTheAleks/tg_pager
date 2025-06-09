@@ -35,7 +35,7 @@ func (r *Gemini) ChangeRole(role string) {
 
 func (r *Gemini) GetResponse(prompt string) (string, error) {
 
-	prompt = r.role + " " + prompt
+	prompt = r.role + " Следуй четкому указанию правил твоей роли и ответь: " + prompt
 	modelName := strings.TrimSpace(r.modelName)
 	apiKey := strings.TrimSpace(r.apiKey)
 

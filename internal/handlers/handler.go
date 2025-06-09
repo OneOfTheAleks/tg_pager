@@ -124,8 +124,8 @@ func (h *Handler) checkMessage(msg models.Message) {
 		if strings.EqualFold(array[0], NameBot) && strings.EqualFold(array[1], CommandChangeRole) && len(array[2]) > 0 {
 			prompt, ok := extractRemaining(msg.Command)
 			if ok {
-				err := h.showSpeak(msg, prompt, msg.MessageID)
-				h.answer(CommandSpeak, msg.ChatID, msg.MessageID, err != nil)
+				h.changeRole(msg, prompt)
+				h.answer(CommandChangeRole, msg.ChatID, msg.MessageID, false)
 			}
 			return
 		}
@@ -151,7 +151,7 @@ func (h *Handler) sendMessageError(message models.Message) {
 	answer := "Чего тебе? Я вот как работую: Укажи мое имя: " + NameBot + ", укажи команду: " + CommandSave + " (сохранить) или " + CommandShow + " (показать), укажи тэг. " +
 		"Если хочешь что-то сохранить, ответь этой командой на сохраняемое сообщение." + LineBreak + " А если хочешь игрануть в 'Орел/Решка' " +
 		"просто набери " + NameBot + ", и укажи команду: " + CommandRandom + " (рандом)." + LineBreak + " Если надо удалить, пиши мое имя " + NameBot + ",  пиши команду " + CommandDelete + ", да " +
-		"напиши тэг. И поговорить тоже можно! Пиши " + NameBot + " команду " + CommandSpeak + " да вопрос свой задавай"
+		"напиши тэг. И поговорить тоже можно! Пиши " + NameBot + " команду " + CommandSpeak + " да вопрос свой задавай. Если надо роль поменять, укажи команду: " + CommandChangeRole + " и роль."
 	h.botService.SendMessage(message.ChatID, answer, message.MessageID)
 
 }
@@ -231,6 +231,10 @@ func (h *Handler) answer(command string, chatId int64, messageId int, hasError b
 	}
 	if strings.EqualFold(command, CommandSpeak) && hasError {
 		h.botService.SendMessage(chatId, "Не могу говорить, я занят!", messageId)
+	}
+
+	if strings.EqualFold(command, CommandChangeRole) {
+		h.botService.SendMessage(chatId, "Роль изменена!", messageId)
 	}
 
 }
