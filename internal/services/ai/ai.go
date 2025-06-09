@@ -2,6 +2,7 @@ package ai
 
 type aiServes interface {
 	GetResponse(prompt string) (string, error)
+	ChangeRole(role string)
 }
 
 type AiService struct {
@@ -20,4 +21,7 @@ func (a *AiService) GetResponse(prompt string) (string, error) {
 		return "", err
 	}
 	return response, nil
+}
+func (a *AiService) ChangeRole(role string) {
+	a.ai.ChangeRole(role)
 }

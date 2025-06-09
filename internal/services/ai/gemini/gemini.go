@@ -13,6 +13,7 @@ import (
 type Gemini struct {
 	apiKey    string
 	modelName string
+	role      string
 }
 
 func New(apikey, modelName string) (*Gemini, error) {
@@ -28,9 +29,13 @@ func New(apikey, modelName string) (*Gemini, error) {
 	}, nil
 }
 
+func (r *Gemini) ChangeRole(role string) {
+	r.role = role
+}
+
 func (r *Gemini) GetResponse(prompt string) (string, error) {
 
-	prompt = "Представь что ты Саймон Петриков Снежный король из мультфильма Время Приключений.  Как бы ты ответил на это: " + prompt
+	prompt = r.role + " " + prompt
 	modelName := strings.TrimSpace(r.modelName)
 	apiKey := strings.TrimSpace(r.apiKey)
 
@@ -46,13 +51,6 @@ func (r *Gemini) GetResponse(prompt string) (string, error) {
 				},
 			},
 		},
-		// Можно раскомментировать и настроить GenerationConfig здесь, если нужно
-		/*
-			GenerationConfig: &GenerationConfig{
-				Temperature:     0.7,
-				MaxOutputTokens: 1000,
-			},
-		*/
 	}
 
 	// Кодируем тело запроса в JSON
