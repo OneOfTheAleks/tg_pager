@@ -21,6 +21,7 @@ const CommandShow = "п"
 const CommandRandom = "р"
 const CommandSpeak = "г"
 const CommandDelete = "у"
+const CommandChangeRole = "р"
 const LineBreak = "\r\n"
 
 type Handler struct {
@@ -119,6 +120,15 @@ func (h *Handler) checkMessage(msg models.Message) {
 			}
 			return
 		}
+		// сменить роль
+		if strings.EqualFold(array[0], NameBot) && strings.EqualFold(array[1], CommandChangeRole) && len(array[2]) > 0 {
+			prompt, ok := extractRemaining(msg.Command)
+			if ok {
+				err := h.showSpeak(msg, prompt, msg.MessageID)
+				h.answer(CommandSpeak, msg.ChatID, msg.MessageID, err != nil)
+			}
+			return
+		}
 
 	}
 	// Рандом
@@ -184,6 +194,11 @@ func (h *Handler) showRandom(in models.Message) {
 		res = "Решка"
 	}
 	h.botService.SendMessage(in.ChatID, "Выпало: "+res)
+}
+
+func (h *Handler) changeRole(in models.Message, role string) {
+	h.aiService.ChangeRole(role)
+	h.botService.SendMessage(in.ChatID, "Роль изменена", in.MessageID)
 }
 
 func (h *Handler) showSpeak(in models.Message, prompt string, MessageID int) error {
